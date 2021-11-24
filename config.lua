@@ -9,7 +9,7 @@ Config.VehicleBones = {'chassis', 'chassis_lowlod', 'chassis_dummy', 'seat_dside
 ----------------------------------------------------------------------------------------
 
 -- Set to true to enable standalone functionality
-Config.Standalone = false
+Config.Standalone = true
 
 -- It's possible to interact with entities through walls so this should be low
 Config.MaxDistance = 3.0
@@ -21,7 +21,7 @@ Config.Debug = false
 Config.EnableOutline = false
 
 -- Enable default options (Toggling vehicle doors)
-Config.EnableDefaultOptions = false
+Config.EnableDefaultOptions = true
 
 -- Key to open the target
 Config.OpenKey = 'LMENU' -- Left Alt
@@ -41,6 +41,46 @@ Config.CircleZones = {
 }
 
 Config.BoxZones = {
+	["boxzone1"] = {                                                                         
+        name = "MissionRowDutyClipboard",
+        coords = vector3(441.7989, -982.0529, 30.67834),
+        length = 0.45,
+        width = 0.35,
+        heading = 11.0,
+        debugPoly = false,
+        minZ = 30.77834,
+        maxZ = 30.87834,
+        options = {
+            {
+              type = "server",
+              event = "QBCore:ToggleDuty",
+              icon = "fas fa-sign-in-alt",
+              label = "Sign In / Out",
+              job = "police",
+            },
+        },
+        distance = 3.5
+    },
+	["boxzone2"] = {
+		name = "CasinoRoulette",
+		coords = vector3(1138.62, 252.75, -51.04),
+		length = 0.45,
+        width = 0.35,
+        heading = 11.0,
+		heading = 260.67,
+		debugPoly = false,
+		minZ = -52.04,
+		maxZ = -50.75,
+        options = {
+            {
+				type = "client",
+                event = "qb_roulette:start_game",
+                icon = "fas fa-coins",
+                label = "Play Roulette",
+            },
+        },
+        distance = 1.5
+    },
 
 }
 
@@ -57,6 +97,60 @@ Config.TargetEntities = {
 }
 
 Config.TargetModels = {
+	["ATM"] = {
+        models = {
+            `prop_atm_01`,
+            `prop_atm_02`,
+            `prop_atm_03`,
+            `prop_fleeca_atm`,
+        },
+        options = {
+            {
+                type = "command",
+                event = "atm",
+                parameters = {},
+                icon = "fab fa-cc-visa",
+                label = "Use ATM",
+            },
+        },
+        distance = 3.0
+    },
+	["burgershotgarage"] = {
+		models = {
+			"ig_floyd",
+		},
+		options = {
+			{
+				type = "client",
+				event = "garage:BurgerShotGarage",
+				icon = "fas fa-car",
+				label = "BurgerShot Garage",
+				job = "burgershot",
+			}
+		},
+		distance = 2.5,
+	},
+	["bike"] = {
+        models = {
+            `bmx`,
+            `cruiser`,
+            `scorcher`,
+            `fixter`,
+            `tribike`,
+            `tribike2`,
+            `tribike3`,
+        },
+        options = {
+            {
+                type = "event",
+                event = "pickup:bike",
+                parameters = {},
+                icon = "fas fa-bicycle",
+                label = "Pickup Bike",
+            },
+        },
+        distance = 2.0
+    },
 
 }
 
@@ -77,6 +171,115 @@ Config.GlobalPlayerOptions = {
 }
 
 Config.Peds = {
+					-- Any of the options in the index table besides model and coords are optional, you can leave them out or set them to false
+[1] = { -- This MUST be a number (UNIQUE), if you make it a string it won't be able to delete peds spawned with the export
+model = 'a_m_m_eastsa_02', -- This is the ped model that is going to be spawning at the given coords
+coords = vector4(4498.49, -4518.49, 4.41, 18.71), -- Cayo Hangar, -- This is the coords that the ped is going to spawn at, always has to be a vector4 and the w value is the heading
+minusOne = true, -- Set this to true if your ped is hovering above the ground but you want it on the ground (OPTIONAL)
+freeze = true, -- Set this to true if you want the ped to be frozen at the given coords (OPTIONAL)
+invincible = true, -- Set this to true if you want the ped to not take any damage from any source (OPTIONAL)
+blockevents = true, -- Set this to true if you don't want the ped to react the to the environment (OPTIONAL)
+--animDict = 'ah_2_ext_alt-1', -- This is the animation dictionairy to load the animation to play from (OPTIONAL)
+--anim = 'prop_phone_overlay_anim-1', -- This is the animation that will play chosen from the animDict, this will loop the whole time the ped is spawned (OPTIONAL)
+flag = 1, -- This is the flag of the animation to play, for all the flags, check the TaskPlayAnim native here https://docs.fivem.net/natives/?_0x5AB552C6 (OPTIONAL)
+scenario = 'WORLD_HUMAN_AA_COFFEE', -- This is the scenario that will play the whole time the ped is spawned, this cannot pair with anim and animDict (OPTIONAL)
+target = { -- This is the target options table, here you can specify all the options to display when targeting the ped (OPTIONAL)
+  options = {
+	{ -- This is the first table with options, you can make as many options inside the options table as you want
+	  type = "client", -- This specifies the type of event the target has to trigger on click, this can be "client", "server", "command" or "qbcommand", this is OPTIONAL and will only work if the event is also specified
+	  event = "garage:CayoPericoGarage", -- This is the event it will trigger on click, this can be a client event, server event, command or qbcore registered command, NOTICE: Normal command can't have arguments passed through, QBCore registered ones can have arguments passed through
+	  icon = 'fas fa-car', -- This is the icon that will display next to this trigger option
+	  label = 'CayoPerico Garage', -- This is the label of this option which you would be able to click on to trigger everything, this has to be a string
+	  --targeticon = 'fas fa-car', -- This is the icon of the target itself, the icon changes to this when it turns blue on this specific option, this is OPTIONAL
+	  --item = 'handcuffs', -- This is the item it has to check for, this option will only show up if the player has this item, this is OPTIONAL
+	  --action = function(entity) -- This is the action it has to perform, this REPLACES the event and this is OPTIONAL
+		--if IsPedAPlayer(entity) then return false end -- This will return false if the entity interacted with is a player and otherwise returns true
+		--TriggerEvent('testing:event', 'test')
+	 -- end,
+	  --canInteract = function(entity, distance, data) -- This will check if you can interact with it, this won't show up if it returns false, this is OPTIONAL
+		--if IsPedAPlayer(entity) then return false end -- This will return false if the entity interacted with is a player and otherwise returns true
+		--return true
+	  --end,
+	  --job = 'police', -- This is the job, this option won't show up if the player doesn't have this job, this can also be done with multiple jobs and grades, if you want multiple jobs you always need a grade with it: job = {["police"] = 0, ["ambulance"] = 2}
+	  --gang = 'ballas', -- This is the gang, this option won't show up if the player doesn't have this gang, this can also be done with multiple gangs and grades, if you want multiple gangs you always need a grade with it: gang = {["ballas"] = 0, ["thelostmc"] = 2}
+	}
+  },
+  distance = 2.5, -- This is the distance for you to be at for the target to turn blue, this is in GTA units and has to be a float value
+},
+--currentpednumber = 0, -- This is the current ped number, this will be assigned when spawned, you can leave this out because it will always be created (OPTIONAL)
+},
+[2] = { 
+	model = 'ig_molly',
+	coords = vector4(-550.15, -190.17, 38.22, 176.72),
+	minusOne = true, 
+	freeze = true,
+	invincible = true,
+	blockevents = true,
+	--animDict = 'abigail_mcs_1_concat-0',
+	--anim = 'csb_abigail_dual-0',
+	flag = 1,
+	scenario = 'WORLD_HUMAN_HANG_OUT_STREET',
+	target = {
+	  options = {
+		{
+			type = "client",
+			event = "QBJobs",
+			icon = "far fa-clipboard",
+			label = "Open City Hall",
+		}
+	  },
+	  distance = 2.5,
+	},
+	--currentpednumber = 0,
+},
+[3] = { 
+	model = 'ig_lifeinvad_01',
+	coords = vector4(-752.97, 265.71, 77.34, 206.93),
+	minusOne = true, 
+	freeze = true,
+	invincible = true,
+	blockevents = true,
+	--animDict = 'abigail_mcs_1_concat-0',
+	--anim = 'csb_abigail_dual-0',
+	flag = 1,
+	scenario = 'WORLD_HUMAN_STAND_MOBILE',
+	target = {
+	  options = {
+		{
+			type = "server",
+			event = "notworking",
+			icon = "fas fa-microchip",     
+			label = "Open Digital Den",
+		}
+	  },
+	  distance = 2.5,
+	},
+	--currentpednumber = 0,
+},
+[4] = { 
+	model = 'ig_lacey_jones_02',
+	coords = vector4(-1647.33, -1075.21, 12.16, 126.91),
+	minusOne = true, 
+	freeze = true,
+	invincible = true,
+	blockevents = true,
+	--animDict = 'abigail_mcs_1_concat-0',
+	--anim = 'csb_abigail_dual-0',
+	flag = 1,
+	scenario = 'WORLD_HUMAN_DRINKING',
+	target = {
+	  options = {
+		{
+			type = "client",
+			event = "Cards:client:openMenu",
+			icon = "fab fa-wizards-of-the-coast",   
+			label = "Open Pokemon TCG Sell",
+		}
+	  },
+	  distance = 2.5,
+	},
+	--currentpednumber = 0,
+},
 
 }
 
@@ -165,6 +368,17 @@ if Config.EnableDefaultOptions then
 			label = "Toggle Hood",
 			action = function(entity)
 				Config.ToggleDoor(entity, 4)
+			end,
+			distance = 0.9
+		}
+	}
+
+	Bones['boot'] = {
+		["Toggle Boot"] = {
+			icon = "fa-duotone fa-engine",
+			label = "Toggle Boot",
+			action = function(entity)
+				Config.ToggleDoor(entity, 5)
 			end,
 			distance = 0.9
 		}
